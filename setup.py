@@ -7,10 +7,10 @@ from path import path
 
 core_ext = Extension('vectorize_test.exts.test_func',
                      sources=['vectorize_test/exts/test_func.pyx'],
-                     extra_objects=['vectorize_test/exts/lib/test_func_cilk.o',
-                                    'vectorize_test/exts/lib/test_func_ifort.o'],
+                     extra_objects=['vectorize_test/exts/lib/test_func_cilk.o',],
+                                    #'vectorize_test/exts/lib/test_func_ifort.o'],
                      #libraries=['test_func_cilk'],
-                     #libraries=['test_func_ifort'],
+                     libraries=['test_func_ifort'],
                      language='c++',
                      extra_compile_args=['-O2'],
                      extra_link_args=['-L./vectorize_test/exts/lib'])
