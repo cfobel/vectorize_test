@@ -26,31 +26,20 @@ void sqrt_test_3d(size_t size[3], float a[size[0]][size[1]][size[2]],
 }
 
 
-#if 0
-void compute_star_plus_from_elements(
-        unsigned int *cardinality,
-        float *sums,
-        float *squared_sums,
-        float *output
-        size_t *shape) {
+void star_plus_from_elements_single_k(size_t net_count, int net_block_count,
+                                      float net_elements[2][2][net_count],
+                                      float out[2][net_count],
+                                      float beta) {
     /*
     Compute Star+ cost for each net, given the:
         -sum of all x/y/...-coordinates
         -sum of all x/y/...-coordinates squared
     of all blocks connected to each net.
     */
-    //output[0:shape[0], 0:shape[1], 0:shape[2]] =
-     //   sqrtf()
-
-        //(np.sqrt(net_elements[:, 1, :] - (net_elements[:, 0, :] *
-                                             //net_elements[:, 0, :]) /
-
-    //output[]
-        //(np.sqrt(net_elements[:, 1, :] - (net_elements[:, 0, :] *
-                                             //net_elements[:, 0, :]) /
-                    //cardinality + beta))
+    out[:][:] = sqrtf(net_elements[:][1][:] - (net_elements[:][0][:] *
+                                               net_elements[:][0][:]) /
+                      net_block_count + beta);
 }
-#endif
 
 }
 /*

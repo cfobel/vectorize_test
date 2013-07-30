@@ -30,7 +30,7 @@ code using Fortran's `bind(c)` support.
 To compile, install the Intel compiler and run the following command from
 within `vectorize_test/exts/lib`:
 
-    ifort -O2 -nofor-main test_func-fortran-c-binding.f -o test_func_ifort.o -shared -static-intel -static-libgcc -static-libstdc++
+    ifort -O2 -f90 -nofor-main test_func-fortran-c-binding.f90 -o test_func_ifort.o -shared -static-intel -static-libgcc -static-libstdc++
 
 
 # Cython Extension #

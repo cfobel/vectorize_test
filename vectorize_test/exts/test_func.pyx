@@ -1,5 +1,6 @@
 cimport cython
 from numpy cimport ndarray
+cimport numpy as np
 import numpy as np
 
 
@@ -17,6 +18,10 @@ cdef extern:
                                             float *net_elements,
                                             float *net_costs, size_t net_count,
                                             float beta)
+    void star_plus_from_elements_single_k(size_t net_count, int net_block_count,
+                                          float *net_elements,
+                                          float *net_costs,
+                                          float beta)
 
 
 ctypedef fused nd_view:
@@ -52,6 +57,7 @@ def py_f_star_plus_from_elements(int [:] net_block_counts,
     cdef size_t net_count = net_block_counts.shape[0]
     f_star_plus_from_elements(&net_block_counts[0], &net_elements[0, 0, 0],
                               &out[0, 0], net_count, beta)
+    return out
 
 
 def py_f_star_plus_from_elements_single_k(int net_block_count,
@@ -61,6 +67,7 @@ def py_f_star_plus_from_elements_single_k(int net_block_count,
     cdef size_t net_count = net_elements.shape[2]
     f_star_plus_from_elements_single_k(net_block_count, &net_elements[0, 0, 0],
                                        &out[0, 0], net_count, beta)
+    return out
 
 
 def py_f_sqrt_test_3d(float [:, :, :] a, float [:, :, :] b):
@@ -79,3 +86,32 @@ def py_f_sqrt_test_2d(float [:, :] a, float [:, :] b):
 def py_f_sqrt_test_1d(float [:] a, float [:] b):
     cdef size_t N = a.shape[0]
     f_sqrt_test_1d(&a[0], &b[0], N)
+
+
+def py_c_star_plus_from_elements_single_k_with_return(int net_block_count,
+                                         float [:, :, :] net_elements,
+                                         float beta, float [:, :] out):
+    cdef size_t N = net_elements.shape[2]
+    star_plus_from_elements_single_k(N, net_block_count,
+                                     &net_elements[0, 0, 0], &out[0, 0], beta)
+    return out
+
+
+def py_c_star_plus_from_elements_single_k(int net_block_count,
+                                         float [:, :, :] net_elements,
+                                         float beta, float [:, :] out):
+    cdef size_t N = net_elements.shape[2]
+    star_plus_from_elements_single_k(N, net_block_count,
+                                     &net_elements[0, 0, 0], &out[0, 0], beta)
+
+
+def cy_star_plus_from_elements_single_k(int net_block_count,
+                                        float [:, :, :] net_elements,
+                                        float beta, float [:, :] out):
+    for i in xrange(net_elements.shape[0]):
+        for k in xrange(net_elements.shape[2]):
+            out[i, k] = np.sqrt(net_elements[i, 1, k]
+                                - (net_elements[i, 0, k]
+                                   * net_elements[i, 0, k]) /
+                                net_block_count + beta)
+    return out
