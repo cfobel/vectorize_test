@@ -17,9 +17,29 @@ next release (as of July 30, 2013):
 To compile, install the Intel compiler and run the following command from
 within `vectorize_test/exts/lib`:
 
-    icc -o libtest_func_cilk.so -c -O2 -shared -static-intel -fPIC -fPIC test_func-cilkplus.cpp
+    icc -o test_func_cilk.o -c -O2 -static-intel -fPIC -fPIC test_func-cilkplus.cpp -static-intel -static-libgcc -static-libstdc++
 
-Then, run the following from the project root (the same directory as this file):
+
+
+# Fortran example #
+
+This example shows the use of Fortran code to calculate the square-root of an
+array of `float` values.  The subroutine is exposed as a function callable by C
+code using Fortran's `bind(c)` support.
+
+To compile, install the Intel compiler and run the following command from
+within `vectorize_test/exts/lib`:
+
+    ifort -O2 -nofor-main test_func-fortran-c-binding.f -o test_func_ifort.o -shared -static-intel -static-libgcc -static-libstdc++
+
+
+# Cython Extension #
+
+To use the compiled Cilk Plus and Fortran examples, compile the Cython
+extension which provides Python wrappers around the corresponding functions.
+
+To compile the Cython extension, run the following from the project root (the
+same directory as this file):
 
     python setup.py build_ext --inplace
 
@@ -28,6 +48,11 @@ Use the extension as shown below:
     >>> from vectorize_test.exts import test_func
     >>> import numpy as np
     >>> a = np.empty(1000000, dtype='f'); a[:] = 25; b = np.empty_like(a)
-    >>> test_func.py_sqrt_test(a, b)
+    >>> # Run the Cilk Plus C function
+    >>> test_func.py_c_sqrt_test(a, b)
+    >>> b
+    array([ 5.,  5.,  5., ...,  5.,  5.,  5.], dtype=float32)
+    >>> # Run the Fortran function
+    >>> test_func.py_f_sqrt_test(a, b)
     >>> b
     array([ 5.,  5.,  5., ...,  5.,  5.,  5.], dtype=float32)
