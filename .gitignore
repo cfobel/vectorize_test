@@ -1,5 +1,7 @@
 *.py[cod]
 
+vectorize_test/exts/*.cpp
+
 # C extensions
 *.so
 
