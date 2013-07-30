@@ -6,20 +6,23 @@
 #include <math.h>
 #include <cilk/cilk.h>
 
+
 extern "C" {
 
-void float_test(float *a, float *b, size_t size) {
-    a[0:size] = 2 * a[0:size] / b[0:size];
-}
 
-
-void sqrt_test(float *a, float *b, size_t size) {
-    b[0:size] = sqrtf(a[0:size]);
-}
-
-
-void sqrt_test_a(size_t size, float a[size], float b[size]) {
+void sqrt_test_1d(size_t size, float a[size], float b[size]) {
     b[:] = sqrtf(a[:]);
+}
+
+
+void sqrt_test_2d(size_t size[2], float a[size[0]][size[1]], float b[size[0]][size[1]]) {
+    b[:][:] = sqrtf(a[:][:]);
+}
+
+
+void sqrt_test_3d(size_t size[3], float a[size[0]][size[1]][size[2]],
+                 float b[size[0]][size[1]][size[2]]) {
+    b[:][:][:] = sqrtf(a[:][:][:]);
 }
 
 
