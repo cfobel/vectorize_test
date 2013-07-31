@@ -22,6 +22,19 @@ cdef extern:
                                           float *net_elements,
                                           float *net_costs,
                                           float beta)
+    float star_plus_from_elements_single_k_total(
+                                          size_t net_count,
+                                          int net_block_count,
+                                          float *net_elements,
+                                          float *net_costs,
+                                          float beta)
+    float star_plus_from_elements_single_k_total_serial(
+                                          size_t net_count,
+                                          int net_block_count,
+                                          float *net_elements,
+                                          float *net_costs,
+                                          float beta)
+    float where_2d_lt(size_t shape[2], float *data, float value)
 
 
 ctypedef fused nd_view:
@@ -103,6 +116,33 @@ def py_c_star_plus_from_elements_single_k(int net_block_count,
     cdef size_t N = net_elements.shape[2]
     star_plus_from_elements_single_k(N, net_block_count,
                                      &net_elements[0, 0, 0], &out[0, 0], beta)
+
+
+def py_c_star_plus_from_elements_single_k_total(int net_block_count,
+                                         float [:, :, :] net_elements,
+                                         float beta, float [:, :] out):
+    cdef size_t N = net_elements.shape[2]
+    total_cost = star_plus_from_elements_single_k_total(N, net_block_count,
+                                                  &net_elements[0, 0, 0],
+                                                  &out[0, 0], beta)
+    return total_cost
+
+
+def py_c_star_plus_from_elements_single_k_total_serial(int net_block_count,
+                                         float [:, :, :] net_elements,
+                                         float beta, float [:, :] out):
+    cdef size_t N = net_elements.shape[2]
+    total_cost = star_plus_from_elements_single_k_total_serial(N, net_block_count,
+                                                  &net_elements[0, 0, 0],
+                                                  &out[0, 0], beta)
+    return total_cost
+
+
+def py_c_where_2d_lt(float [:, :] data, float value):
+    cdef size_t shape[2]
+    shape[0] = data.shape[0]
+    shape[1] = data.shape[1]
+    return where_2d_lt(shape, &data[0, 0], value)
 
 
 def cy_star_plus_from_elements_single_k(int net_block_count,
