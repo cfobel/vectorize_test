@@ -17,7 +17,7 @@ next release (as of July 30, 2013):
 To compile, install the Intel compiler and run the following command from
 within `vectorize_test/exts/lib`:
 
-    icc -o test_func_cilk.o -c -O2 -static-intel -fPIC -fPIC test_func-cilkplus.cpp -static-intel -static-libgcc -static-libstdc++
+    icc -o test_func_cilk.o -c -O2 -static-intel -static-libgcc -static-libstdc++ -fPIC test_func-cilkplus.cpp
 
 
 
@@ -30,7 +30,7 @@ code using Fortran's `bind(c)` support.
 To compile, install the Intel compiler and run the following command from
 within `vectorize_test/exts/lib`:
 
-    ifort -O2 -f90 -nofor-main test_func-fortran-c-binding.f90 -o test_func_ifort.o -shared -static-intel -static-libgcc -static-libstdc++
+    ifort -o test_func_ifort.o -c -O2 -nofor-main -shared -static-intel -static-libgcc -static-libstdc++ test_func-fortran-c-binding.f90
 
 
 # Cython Extension #

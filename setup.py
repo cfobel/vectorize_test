@@ -3,18 +3,13 @@
 from distutils.core import setup, Extension
 from Cython.Build import cythonize
 
-from path import path
-
 core_ext = Extension('vectorize_test.exts.test_func',
                      sources=['vectorize_test/exts/test_func.pyx'],
-                     #extra_objects=['vectorize_test/exts/lib/test_func_cilk.o',],
                      extra_objects=['vectorize_test/exts/lib/test_func_cilk.o',
                                     'vectorize_test/exts/lib/test_func_ifort.o'],
-                     #libraries=['test_func_cilk'],
-                     #libraries=['test_func_ifort'],
+                     libraries=['cilkrts'],
                      language='c++',
-                     extra_compile_args=['-O2'],
-                     extra_link_args=['-L./vectorize_test/exts/lib'])
+                     extra_compile_args=['-O2'])
 
 setup(name = "vectorize_test",
     version = "0.0.1",
@@ -26,6 +21,6 @@ setup(name = "vectorize_test",
     long_description = """""",
     packages = ['vectorize_test', 'vectorize_test.exts'],
 
-    package_data={'vectorize_test.exts': [ '*.so', ], },
+    package_data={'vectorize_test.exts': ['*.so'], },
     ext_modules=cythonize([core_ext])
 )
